@@ -4,7 +4,7 @@
 
 #include "core/math/Vec3.h"
 
-namespace slam {
+namespace core {
 namespace math {
 
 // Unit quaternion, Hamilton convention (w real, vector x,y,z). A vector v is
@@ -65,4 +65,4 @@ struct Quat
 };
 
 } // namespace math
-} // namespace slam
+} // namespace core

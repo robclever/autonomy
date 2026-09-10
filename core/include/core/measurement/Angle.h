@@ -3,16 +3,14 @@
 
 #include <cmath>
 
-
 namespace core
 {
 namespace measurement
 {
-    class Angle
-    {
-
-    };
-}
-}
+class Angle
+{
+};
+} // namespace measurement
+} // namespace core
 
 #endif // CORE_MEASUREMENT_ANGLE_H

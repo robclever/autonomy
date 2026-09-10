@@ -4,8 +4,9 @@
 
 // Minimal unit test for core/Clock. Uses assert() directly for now; a test
 // framework (Catch2 / GoogleTest) can be wired in later.
-int main() {
-    using namespace slam;
+int main()
+{
+    using namespace core::time;
 
     Clock clock(10'000'000); // 10 ms steps
     assert(clock.now_ns() == 0);

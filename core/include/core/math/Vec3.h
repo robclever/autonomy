@@ -2,7 +2,7 @@
 
 #include <cmath>
 
-namespace slam {
+namespace core {
 namespace math {
 
 // Minimal 3D vector, dependency-free so the project always builds. Swap in a
@@ -54,4 +54,4 @@ struct Vec3
 inline Vec3 operator*(double s, const Vec3& v) { return v * s; }
 
 } // namespace math
-} // namespace slam
+} // namespace core

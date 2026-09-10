@@ -1,12 +1,17 @@
-# Core library tests
+# Core library tests — layout mirrors core/include/<component>
+# Every .cpp file in this tree is built as a standalone test executable.
 
-add_executable(test_frames src/test_frames.cpp)
-target_link_libraries(test_frames PRIVATE core)
+file(GLOB_RECURSE TEST_SOURCES CONFIGURE_DEPENDS *.cpp)
 
-add_executable(test_clock src/test_clock.cpp)
-target_link_libraries(test_clock PRIVATE core)
+foreach(test_source ${TEST_SOURCES})
+    get_filename_component(test_name ${test_source} NAME_WE)
+    add_executable(${test_name} ${test_source})
+    target_link_libraries(${test_name} PRIVATE core)
+endforeach()
 
 # Register with CTest
 include(CTest)
-add_test(NAME test_frames COMMAND test_frames)
-add_test(NAME test_clock COMMAND test_clock)
+foreach(test_source ${TEST_SOURCES})
+    get_filename_component(test_name ${test_source} NAME_WE)
+    add_test(NAME ${test_name} COMMAND ${test_name})
+endforeach()

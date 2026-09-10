@@ -2,7 +2,10 @@
 
 #include <cstdint>
 
-namespace slam {
+namespace core
+{
+namespace time
+{
 
 // Deterministic, step-based clock. The whole simulation advances in fixed
 // timesteps so runs are reproducible and unit-testable (see .README,
@@ -14,7 +17,9 @@ class Clock
     using time = std::uint64_t;     // ticks since simulation start
 
     explicit Clock(duration step_ns, time start_ns = 0) noexcept
-        : step_ns_(step_ns), now_ns_(start_ns) {}
+        : step_ns_(step_ns), now_ns_(start_ns)
+    {
+    }
 
     void advance() noexcept { now_ns_ += step_ns_; }
     void advance(duration n_steps) noexcept { now_ns_ += step_ns_ * n_steps; }
@@ -27,4 +32,5 @@ class Clock
     time now_ns_;
 };
 
-} // namespace slam
+} // namespace time
+} // namespace core

@@ -1,8 +1,8 @@
 namespace core::measurement
 {
-    class Razimuth
-    {
-        Razimuth() = default;
-        
-    };
-}
+class Razimuth
+{
+  public:
+    Razimuth() = default;
+};
+} // namespace core::measurement

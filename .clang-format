@@ -1,6 +1,8 @@
 ---
 BasedOnStyle: LLVM
 IndentWidth: 4
+TabWidth: 4
+UseTab: Never
 ContinuationIndentWidth: 4
 ColumnLimit: 100
 PointerAlignment: Left
@@ -14,7 +16,7 @@ BraceWrapping:
   AfterControlStatement: Always
   AfterEnum: true
   AfterFunction: true
-  AfterNamespace: false
+  AfterNamespace: true
   AfterObjCDeclaration: false
   AfterStruct: true
   AfterUnion: true
