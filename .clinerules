@@ -1,0 +1,69 @@
+# Project Conventions
+
+These rules are enforced automatically. Follow them in all code you write or modify.
+
+## Include Style
+
+- All project includes use angle brackets: `#include <path/to/File.h>`
+- System/stdlib includes also use angle brackets: `#include <vector>`
+- NEVER use quoted includes (`#include "..."`) for any header
+
+## Header Guards
+
+- Use `#ifndef` / `#define` / `#endif` include guards (NOT `#pragma once`)
+- Guard name: full path from module include dir, uppercased, slashes/dots → underscores
+  - e.g. `math/Vec3.h` → `MATH_VEC3_H`
+  - e.g. `sensors/radar/RadarEcho.h` → `SENSORS_RADAR_RADAR_ECHO_H`
+  - e.g. `scenarios/Detection.h` → `SCENARIOS_DETECTION_H`
+
+## Code Style
+
+- C++17
+- Formatting: LLVM-based clang-format (4-space indent, 100 col limit, pointer left-aligned)
+- Run `clang-format -i <files>` after editing to ensure compliance
+- Namespace nesting: `namespace foo { namespace bar { ... } }` (no inline `foo::bar`)
+
+## Module Dependency Layering
+
+Compile-time dependencies are strictly enforced by `scripts/check_deps.py`:
+
+| Module | May depend on |
+|--------|---------------|
+| core | (nothing) |
+| environment | core |
+| sensors | core, environment |
+| fusion | core, sensors |
+| autonomy | core, fusion |
+| platform | core, autonomy |
+| sim | all modules |
+
+- `sensors` headers go in `systems/include/sensors/<type>/`
+- Each sensor type has its own directory: `radar/`, `camera/`, etc.
+- Tests go in `<module>/test/<component>/` and link against their module library
+
+## Sensor Architecture
+
+- Every sensor measurement extends `core::measurement::Spherical` (range, azimuth, elevation)
+- Every sensor device implements `sim::scenarios::ISensorDevice` with `sense() → vector<Detection>`
+- `Detection` (in `sim/include/scenarios/Detection.h`) is the generic inter-sensor type
+- Multiple sensors aggregate via `sim::scenarios::SensorSuite`
+- `MeasurementAdapter` converts `Detection` → `autonomy::SLAM::SlamMeasurement`
+
+## Autonomy Module Layout
+
+- `systems/include/autonomy/SLAM/` — SLAM algorithm interfaces and stubs (SlamAlgorithm, SlamState, SlamMeasurement, EkfSlam, GraphSlam)
+- `systems/include/autonomy/models/sensor/` — landmark models (LandmarkModel, LandmarkModelKnownCorr, LandmarkModelUnknownCorr)
+- `Landmark.h` moved to `core/include/Landmark.h` (fundamental type used by both environment and autonomy)
+
+## Build System
+
+- Header-only libraries use `add_library(<name> INTERFACE)`
+- Compiled libraries list `.cpp` files explicitly in `add_library()`
+- Each module has its own `CMakeLists.txt` with optional `add_subdirectory(test)`
+- Tests are standalone executables registered with CTest via glob discovery
+
+## Testing
+
+- Tests use `assert()` directly (no test framework yet)
+- Each test `.cpp` is a standalone executable with an `main()` returning 0 on success
+- Scenario tests live in `sim/test/scenarios/` and exercise the full pipeline

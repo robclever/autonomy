@@ -15,6 +15,12 @@ enable_testing()
 # Add core library
 add_subdirectory(core)
 
+# Add environment library (ground-truth world model)
+add_subdirectory(environment)
+
+# Add systems library (sensors, fusion, autonomy)
+add_subdirectory(systems)
+
 # Add sim library
 add_subdirectory(sim)
 
