@@ -11,13 +11,13 @@ constexpr double kTol = 1e-9;
 void expectNear(double a, double b, double tol = kTol) { assert(std::fabs(a - b) <= tol); }
 } // namespace
 
-// Unit tests for sim environment/RadarDevice.
+/// @brief Unit tests for sim environment/RadarDevice.
 int main()
 {
     using systems::sensors::radar::RadarParams;
     using systems::sensors::radar::RadarSensor;
 
-    // --- Device produces echoes from a world with one in-range landmark ---
+    /// @brief --- Device produces echoes from a world with one in-range landmark ---
     {
         sim::World world;
         world.addLandmark("tower", core::math::Vec3{500.0, 0.0, -100.0}, 1.0);
@@ -35,14 +35,14 @@ int main()
 
         const auto echoes = device.senseEchoes(world, observer);
         assert(!echoes.empty());
-        // Range should be near 500 m (with noise).
+        /// @brief Range should be near 500 m (with noise).
         assert(std::fabs(echoes[0].range - 500.0) < 50.0);
     }
 
-    // --- Device with high detection threshold drops weak targets ---
+    /// @brief --- Device with high detection threshold drops weak targets ---
     {
         sim::World world;
-        // Weak reflectivity at long range -> low detectibility.
+        /// @brief Weak reflectivity at long range -> low detectibility.
         world.addLandmark("far_weak", core::math::Vec3{900.0, 0.0, -100.0}, 0.001);
 
         RadarParams params;
@@ -60,7 +60,7 @@ int main()
         assert(echoes.empty()); // nothing passes the threshold
     }
 
-    // --- Empty world produces no echoes ---
+    /// @brief --- Empty world produces no echoes ---
     {
         sim::World world;
         RadarSensor sensor;

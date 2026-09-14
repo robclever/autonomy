@@ -10,8 +10,8 @@ namespace core
 namespace math
 {
 
-// Unit quaternion, Hamilton convention (w real, vector x,y,z). A vector v is
-// rotated by  q' = q * [0, v] * q*.
+/// @brief Unit quaternion, Hamilton convention (w real, vector x,y,z).
+/// @details A vector v is rotated by q' = q * [0, v] * q*.
 struct Quat
 {
     double w{1.0};
@@ -19,11 +19,25 @@ struct Quat
     double y{0.0};
     double z{0.0};
 
+    /// @brief Default constructor. Produces the identity quaternion.
     Quat() = default;
+
+    /// @brief Construct from individual components.
+    /// @param w_ Real (scalar) part.
+    /// @param x_ i component.
+    /// @param y_ j component.
+    /// @param z_ k component.
     Quat(double w_, double x_, double y_, double z_) : w(w_), x(x_), y(y_), z(z_) {}
 
+    /// @brief Return the identity quaternion (no rotation).
+    /// @return Identity quaternion {1, 0, 0, 0}.
     static Quat identity() { return Quat{1.0, 0.0, 0.0, 0.0}; }
 
+    /// @brief Construct a unit quaternion from an axis-angle representation.
+    /// @param axis Rotation axis (normalized internally).
+    /// @param radians Rotation angle in radians.
+    /// @return Quaternion representing the rotation. Returns identity if @p axis
+    ///   has near-zero norm.
     static Quat fromAxisAngle(const Vec3& axis, double radians)
     {
         const double n = axis.norm();
@@ -35,9 +49,13 @@ struct Quat
         return Quat{std::cos(half), a.x * s, a.y * s, a.z * s};
     }
 
-    // Standard aerospace yaw-pitch-roll attitude built in NED frame order
-    // (rotations about Down, +East/body-y, +body-x respectively), giving a
-    // NED -> body rotation.
+    /// @brief Build an aerospace yaw-pitch-roll attitude quaternion (NED frame order).
+    /// @details Rotations applied about Down, +East (body-y), +body-x
+    ///   respectively, giving a NED -> body rotation.
+    /// @param yaw Rotation about Down [rad].
+    /// @param pitch Rotation about +East [rad].
+    /// @param roll Rotation about +body-x [rad].
+    /// @return Quaternion representing the combined NED -> body rotation.
     static Quat fromYawPitchRoll(double yaw, double pitch, double roll)
     {
         const Quat qz = fromAxisAngle(Vec3{0.0, 0.0, 1.0}, yaw);   // about Down
@@ -46,8 +64,16 @@ struct Quat
         return qx * (qy * qz);
     }
 
+    /// @brief Squared norm.
+    /// @return w^2 + x^2 + y^2 + z^2.
     double normSq() const { return w * w + x * x + y * y + z * z; }
+
+    /// @brief Conjugate (negate the vector part).
+    /// @return Conjugate quaternion.
     Quat conjugate() const { return Quat{w, -x, -y, -z}; }
+
+    /// @brief Inverse (assumes non-zero norm).
+    /// @return Inverse quaternion. Returns identity if normSq < 1e-16.
     Quat inverse() const
     {
         const double ns = normSq();
@@ -57,13 +83,18 @@ struct Quat
         return Quat{c.w / ns, c.x / ns, c.y / ns, c.z / ns};
     }
 
+    /// @brief Hamilton product (quaternion multiplication).
+    /// @param o Right-hand operand.
+    /// @return Product quaternion (*this * o).
     Quat operator*(const Quat& o) const
     {
         return Quat{w * o.w - x * o.x - y * o.y - z * o.z, w * o.x + x * o.w + y * o.z - z * o.y,
                     w * o.y - x * o.z + y * o.w + z * o.x, w * o.z + x * o.y - y * o.x + z * o.w};
     }
 
-    // Rotate vector v by this quaternion (assumes unit length).
+    /// @brief Rotate a vector by this quaternion (assumes unit length).
+    /// @param v Vector to rotate.
+    /// @return Rotated vector.
     Vec3 rotate(const Vec3& v) const
     {
         const Quat p{0.0, v.x, v.y, v.z};

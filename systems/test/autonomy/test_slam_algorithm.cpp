@@ -12,7 +12,7 @@ namespace
 constexpr double kTol = 1e-9;
 void expectNear(double a, double b, double tol = kTol) { assert(std::fabs(a - b) <= tol); }
 
-// Build a measurement with a known landmark id.
+/// @brief Build a measurement with a known landmark id.
 systems::autonomy::SlamMeasurement makeMeas(double range, double az, double el, std::uint32_t id)
 {
     systems::autonomy::SlamMeasurement m;
@@ -24,7 +24,7 @@ systems::autonomy::SlamMeasurement makeMeas(double range, double az, double el, 
 }
 } // namespace
 
-// Unit tests for the SLAM algorithm interface and stub implementations.
+/// @brief Unit tests for the SLAM algorithm interface and stub implementations.
 int main()
 {
     using systems::autonomy::EkfSlam;
@@ -33,7 +33,7 @@ int main()
     using systems::autonomy::SlamInput;
     using systems::autonomy::SlamState;
 
-    // --- Polymorphic use: both algorithms behind SlamAlgorithm* ---
+    /// @brief --- Polymorphic use: both algorithms behind SlamAlgorithm* ---
     {
         std::unique_ptr<SlamAlgorithm> algos[] = {std::make_unique<EkfSlam>(),
                                                   std::make_unique<GraphSlam>()};
@@ -47,24 +47,24 @@ int main()
             algo->process(input);
             SlamState s = algo->state();
 
-            // Pose recorded.
+            /// @brief Pose recorded.
             expectNear(s.pose.position.x, 1.0);
             expectNear(s.pose.position.y, 2.0);
             expectNear(s.pose.position.z, -3.0);
 
-            // Two landmarks added.
+            /// @brief Two landmarks added.
             assert(s.landmarks.size() == 2);
             assert(s.landmarks[0].id == 1);
             assert(s.landmarks[1].id == 2);
 
-            // Reset clears state.
+            /// @brief Reset clears state.
             algo->reset();
             s = algo->state();
             assert(s.landmarks.empty());
         }
     }
 
-    // --- Measurements without landmarkId are ignored by stub ---
+    /// @brief --- Measurements without landmarkId are ignored by stub ---
     {
         EkfSlam ekf;
         SlamInput input;
@@ -78,7 +78,7 @@ int main()
         assert(ekf.state().landmarks.empty());
     }
 
-    // --- Duplicate landmark ids are not double-added ---
+    /// @brief --- Duplicate landmark ids are not double-added ---
     {
         GraphSlam graph;
         SlamInput input;

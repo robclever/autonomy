@@ -6,9 +6,9 @@
 #include <math/Vec3.h>
 #include <time/Clock.h>
 
-// Temporary bootstrap: proves the build and the first vertical slice
-// (world model -> structured observations from an aircraft pose). Sensor,
-// fusion, autonomy, and platform stages are still stubs; see .README.
+/// @brief Temporary bootstrap: proves the build and the first vertical slice
+/// (world model -> structured observations from an aircraft pose). Sensor,
+/// fusion, autonomy, and platform stages are still stubs; see .README.
 int main()
 {
     using core::math::Vec3;

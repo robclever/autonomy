@@ -9,7 +9,7 @@ namespace core
 namespace kinematics
 {
 
-// Where the aircraft is and how it is oriented in the world.
+/// @brief Where the aircraft is and how it is oriented in the world.
 struct Pose
 {
     math::Vec3 position;    // aircraft origin, expressed in NED [m]

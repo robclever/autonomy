@@ -16,28 +16,28 @@ constexpr double kTol = 1e-6;
 void expectNear(double a, double b, double tol = 1e-6) { assert(std::fabs(a - b) <= tol); }
 } // namespace
 
-// Basic scenario: aircraft flies straight north past landmarks.
-// Verifies the full pipeline runs step-by-step and produces sensible output.
+/// @brief Basic scenario: aircraft flies straight north past landmarks.
+/// Verifies the full pipeline runs step-by-step and produces sensible output.
 int main()
 {
     using namespace sim::scenarios;
     using systems::sensors::radar::RadarParams;
     using systems::sensors::radar::RadarSensor;
 
-    // --- World: landmarks spread out north and to the sides ---
+    /// @brief --- World: landmarks spread out north and to the sides ---
     sim::World world;
     world.addLandmark("tower_near", core::math::Vec3{200.0, 50.0, -500.0}, 1.0);
     world.addLandmark("tower_mid", core::math::Vec3{600.0, -30.0, -500.0}, 1.0);
     world.addLandmark("tower_far", core::math::Vec3{1000.0, 80.0, -500.0}, 1.0);
 
-    // --- Trajectory: start south of landmarks, fly north ---
-    // Start at (0,0,-500), heading 0 (north), fly 1200 m at 50 m/s.
+    /// @brief --- Trajectory: start south of landmarks, fly north ---
+    /// Start at (0,0,-500), heading 0 (north), fly 1200 m at 50 m/s.
     TrajectoryBuilder builder(core::math::Vec3{0.0, 0.0, -500.0}, 0.0, 0.0);
     builder.flyStraight(1200.0, 50.0, 0.5);
     auto traj = std::make_unique<ListTrajectory>(builder.build());
     std::cout << "basic scenario: " << traj->numSteps() << " steps\n";
 
-    // --- Radar: wide field, low detection threshold so we see everything ---
+    /// @brief --- Radar: wide field, low detection threshold so we see everything ---
     RadarParams params;
     params.maxRangeM = 2000.0;
     params.minRangeM = 1.0;
@@ -48,14 +48,14 @@ int main()
     RadarSensor sensor(params);
     sim::RadarDevice device(sensor);
 
-    // --- Sensor suite (can hold multiple sensors) ---
+    /// @brief --- Sensor suite (can hold multiple sensors) ---
     SensorSuite suite;
     suite.addDevice(std::make_unique<sim::RadarDevice>(device));
 
-    // --- SLAM ---
+    /// @brief --- SLAM ---
     systems::autonomy::EkfSlam slam;
 
-    // --- Scenario ---
+    /// @brief --- Scenario ---
     Scenario scenario(std::move(world), std::move(traj), std::move(suite), slam, 0.5);
     scenario.run();
 
@@ -63,9 +63,9 @@ int main()
     assert(!steps.empty());
     std::cout << "basic scenario: " << steps.size() << " steps recorded\n";
 
-    // --- Verifications ---
+    /// @brief --- Verifications ---
 
-    // 1. SLAM tracked the aircraft pose at every step.
+    /// @brief 1. SLAM tracked the aircraft pose at every step.
     for (const auto& s : steps)
     {
         expectNear(s.slamAfter.pose.position.x, s.truePose.position.x, 1e-9);
@@ -73,7 +73,7 @@ int main()
         expectNear(s.slamAfter.pose.position.z, s.truePose.position.z, 1e-9);
     }
 
-    // 2. At the first step, the near landmark (200 m ahead) should be in view.
+    /// @brief 2. At the first step, the near landmark (200 m ahead) should be in view.
     {
         bool found = false;
         for (const auto& d : steps[0].detections)
@@ -84,7 +84,7 @@ int main()
         assert(found && "near landmark should be detected at step 0");
     }
 
-    // 3. Detections are produced at multiple steps (radar is working throughout).
+    /// @brief 3. Detections are produced at multiple steps (radar is working throughout).
     std::size_t stepsWithDetections = 0;
     for (const auto& s : steps)
     {
@@ -94,7 +94,7 @@ int main()
     assert(stepsWithDetections > 5 && "radar should produce detections across many steps");
     std::cout << "basic scenario: " << stepsWithDetections << " steps had detections\n";
 
-    // 4. Measurements are produced and passed to SLAM.
+    /// @brief 4. Measurements are produced and passed to SLAM.
     {
         bool foundMeas = false;
         for (const auto& s : steps)
@@ -105,7 +105,7 @@ int main()
         assert(foundMeas && "measurements should be produced at some steps");
     }
 
-    // 5. The aircraft advanced north over the scenario.
+    /// @brief 5. The aircraft advanced north over the scenario.
     const double startX = steps.front().truePose.position.x;
     const double endX = steps.back().truePose.position.x;
     assert(endX > startX + 500.0 && "aircraft should have flown north");

@@ -13,7 +13,7 @@ namespace sensors
 namespace camera
 {
 
-// Tunable parameters for the camera sensor model.
+/// @brief Tunable parameters for the camera sensor model.
 struct CameraParams
 {
     double maxRangeM{500.0};               // max detection range
@@ -26,22 +26,22 @@ struct CameraParams
     double detectionThreshold{0.3};        // minimum detectionConfidence to register
 };
 
-// Camera sensor model.
-//
-// Consumes the structured, noiseless observations produced by World::observe()
-// and degrades them the way a real camera would:
-//   1. Range gating (min/max range)
-//   2. Field-of-view gating (azimuth and elevation within FOV)
-//   3. Detection probability from contrast/brightness and range falloff
-//   4. Additive noise on range / azimuth / elevation
-//
-// Only targets whose detectionConfidence exceeds the threshold are reported.
+/// @brief Camera sensor model.
+///
+/// Consumes the structured, noiseless observations produced by World::observe()
+/// and degrades them the way a real camera would:
+///   1. Range gating (min/max range)
+///   2. Field-of-view gating (azimuth and elevation within FOV)
+///   3. Detection probability from contrast/brightness and range falloff
+///   4. Additive noise on range / azimuth / elevation
+///
+/// Only targets whose detectionConfidence exceeds the threshold are reported.
 class CameraSensor
 {
   public:
     explicit CameraSensor(const CameraParams& params = {}) : params_(params) {}
 
-    // Produce camera detections from true world observations.
+    /// @brief Produce camera detections from true world observations.
     std::vector<CameraMeasurement> process(const std::vector<sim::Observation>& observations) const;
 
     const CameraParams& params() const noexcept { return params_; }

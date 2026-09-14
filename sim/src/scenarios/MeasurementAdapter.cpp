@@ -10,8 +10,8 @@ namespace scenarios
 
 namespace
 {
-// Compute range/azimuth/elevation from aircraft pose to a landmark (NED).
-// Mirrors World::observe() so we can match echoes to ground truth.
+/// @brief Compute range/azimuth/elevation from aircraft pose to a landmark (NED).
+/// Mirrors World::observe() so we can match echoes to ground truth.
 struct RazEl
 {
     double range;
@@ -40,7 +40,7 @@ MeasurementAdapter::convert(const std::vector<Detection>& detections)
         m.range = d.range;
         m.azimuth = d.azimuth;
         m.elevation = d.elevation;
-        // landmarkId left unset — unknown association.
+        /// @brief landmarkId left unset — unknown association.
         out.push_back(m);
     }
     return out;
@@ -51,7 +51,7 @@ MeasurementAdapter::convertAssociated(const std::vector<Detection>& detections,
                                       const std::vector<Landmark>& landmarks,
                                       const core::kinematics::Pose& aircraftPose, double toleranceM)
 {
-    // Precompute ground-truth range/az/el to each landmark.
+    /// @brief Precompute ground-truth range/az/el to each landmark.
     std::vector<RazEl> truth;
     truth.reserve(landmarks.size());
     for (const auto& lm : landmarks)
@@ -66,7 +66,7 @@ MeasurementAdapter::convertAssociated(const std::vector<Detection>& detections,
         m.azimuth = d.azimuth;
         m.elevation = d.elevation;
 
-        // Nearest-neighbor in range; require match within tolerance.
+        /// @brief Nearest-neighbor in range; require match within tolerance.
         double bestErr = std::numeric_limits<double>::infinity();
         std::size_t bestIdx = 0;
         for (std::size_t i = 0; i < landmarks.size(); ++i)
@@ -79,7 +79,9 @@ MeasurementAdapter::convertAssociated(const std::vector<Detection>& detections,
             }
         }
         if (bestErr <= toleranceM)
+        {
             m.landmarkId = landmarks[bestIdx].id;
+        }
 
         out.push_back(m);
     }

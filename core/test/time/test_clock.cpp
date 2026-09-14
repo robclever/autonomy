@@ -2,8 +2,8 @@
 
 #include <time/Clock.h>
 
-// Minimal unit test for core/Clock. Uses assert() directly for now; a test
-// framework (Catch2 / GoogleTest) can be wired in later.
+/// @brief Minimal unit test for core/Clock. Uses assert() directly for now; a test
+/// framework (Catch2 / GoogleTest) can be wired in later.
 int main()
 {
     using namespace core::time;

@@ -12,19 +12,19 @@
 namespace sim
 {
 
-// A camera device mounted on the ownship (player aircraft).
-//
-// Implements ISensorDevice so it can be added to a SensorSuite alongside any
-// other sensor. Internally it queries World::observe() for true observations
-// and feeds them through the CameraSensor model (range gating, FOV gating,
-// contrast/brightness detection, noise) to produce generic Detections.
+/// @brief A camera device mounted on the ownship (player aircraft).
+///
+/// Implements ISensorDevice so it can be added to a SensorSuite alongside any
+/// other sensor. Internally it queries World::observe() for true observations
+/// and feeds them through the CameraSensor model (range gating, FOV gating,
+/// contrast/brightness detection, noise) to produce generic Detections.
 class CameraDevice : public scenarios::ISensorDevice
 {
   public:
     explicit CameraDevice(const systems::sensors::camera::CameraSensor& sensor,
                           const sim::ObservationParams& obsParams = {});
 
-    // Returns generic Detections (body-frame spherical + confidence).
+    /// @brief Returns generic Detections (body-frame spherical + confidence).
     std::vector<scenarios::Detection>
     sense(const World& world, const core::kinematics::Pose& aircraftPose) const override;
 

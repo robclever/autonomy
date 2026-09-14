@@ -2,10 +2,10 @@
 
 #include <sensors/radar/RadarEcho.h>
 
-// Unit tests for sensors/radar/RadarEcho.
+/// @brief Unit tests for sensors/radar/RadarEcho.
 int main()
 {
-    // --- Default construction: zeroed spherical fields + zero radar params ---
+    /// @brief --- Default construction: zeroed spherical fields + zero radar params ---
     {
         systems::sensors::radar::RadarEcho echo;
         assert(echo.range == 0.0);
@@ -16,7 +16,7 @@ int main()
         assert(echo.likelihoodOfDetect == 0.0);
     }
 
-    // --- Field assignment: radar params independent of spherical base ---
+    /// @brief --- Field assignment: radar params independent of spherical base ---
     {
         systems::sensors::radar::RadarEcho echo;
         echo.range = 500.0;

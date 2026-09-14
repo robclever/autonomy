@@ -14,10 +14,10 @@
 namespace sim
 {
 
-// One structured observation returned by World::observe(): what the
-// environment would report for a single landmark seen from an aircraft pose.
-// It carries the range-bearing form a real sensor pipeline will consume,
-// plus ground truth for evaluation.
+/// @brief One structured observation returned by World::observe(): what the
+/// environment would report for a single landmark seen from an aircraft pose.
+/// It carries the range-bearing form a real sensor pipeline will consume,
+/// plus ground truth for evaluation.
 struct Observation
 {
     std::uint32_t id{0};
@@ -35,9 +35,9 @@ struct ObservationParams
     double minRangeM{1.0};
 };
 
-// The world model: it owns the truth. Given an aircraft pose it emits exactly
-// what a noiseless "ideal sensor" would observe. Per-sensor models in
-// systems/sensors/ will later degrade these observations with noise/bias.
+/// @brief The world model: it owns the truth. Given an aircraft pose it emits exactly
+/// what a noiseless "ideal sensor" would observe. Per-sensor models in
+/// systems/sensors/ will later degrade these observations with noise/bias.
 class World
 {
   public:

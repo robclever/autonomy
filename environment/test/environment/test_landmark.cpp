@@ -3,13 +3,13 @@
 
 #include <Landmark.h>
 
-// Unit tests for environment/Landmark.
+/// @brief Unit tests for environment/Landmark.
 int main()
 {
     using core::math::Vec3;
     using sim::Landmark;
 
-    // --- Default construction ---
+    /// @brief --- Default construction ---
     {
         Landmark lm;
         assert(lm.id == 0);
@@ -20,7 +20,7 @@ int main()
         assert(lm.reflectivity == 1.0);
     }
 
-    // --- Field assignment ---
+    /// @brief --- Field assignment ---
     {
         Landmark lm;
         lm.id = 42;

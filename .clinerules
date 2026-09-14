@@ -23,6 +23,23 @@ These rules are enforced automatically. Follow them in all code you write or mod
 - Run `clang-format -i <files>` after editing to ensure compliance
 - Namespace nesting: `namespace foo { namespace bar { ... } }` (no inline `foo::bar`)
 
+## Control Flow Conventions
+
+- **Single return**: Every function has exactly one `return` statement at the end.
+  - Use a result variable, assign within conditionals, return at the end.
+  - Example: `double result = 0.0; if (cond) { result = ...; } return result;`
+- **No `continue`**: Invert the loop condition and nest the logic inside an `if`.
+  - Instead of: `if (!cond) { continue; } <logic>`
+  - Write: `if (cond) { <logic> }`
+- **No `break`**: Restructure logic to avoid early loop exit.
+- **No early returns in conditionals**: Do not `return` from inside an `if` block.
+- **All `if`/`for`/`while` must have braces**: Even single-statement bodies.
+  - Example: `if (cond) { do_something(); }` (NOT `if (cond) do_something();`)
+- **Functions that check a condition and exit early should return `bool`**:
+  - Return `true` if the condition is met and work is done, `false` otherwise.
+- **Functions returning an object on success/failure should use `std::optional`**:
+  - Return `std::optional<T>` instead of early-returning the object or sentinel values.
+
 ## Module Dependency Layering
 
 Compile-time dependencies are strictly enforced by `scripts/check_deps.py`:

@@ -23,9 +23,9 @@ void TrajectoryBuilder::appendCurrent()
 
 void TrajectoryBuilder::step(double speedMps, double dt)
 {
-    // Body forward axis is (1,0,0). Rotate by pitch about body-y, then yaw
-    // about world-down (NED z). In NED: forward = (cos yaw cos pitch,
-    // sin yaw cos pitch, -sin pitch).
+    /// @brief Body forward axis is (1,0,0). Rotate by pitch about body-y, then yaw
+    /// about world-down (NED z). In NED: forward = (cos yaw cos pitch,
+    /// sin yaw cos pitch, -sin pitch).
     const double cn = std::cos(yaw_) * std::cos(pitch_);
     const double ce = std::sin(yaw_) * std::cos(pitch_);
     const double cd = -std::sin(pitch_);
@@ -40,7 +40,9 @@ TrajectoryBuilder& TrajectoryBuilder::flyStraight(double distanceM, double speed
     const double stepDist = speedMps * dt;
     const std::size_t n = static_cast<std::size_t>(std::ceil(distanceM / stepDist));
     for (std::size_t i = 0; i < n; ++i)
+    {
         step(speedMps, dt);
+    }
     return *this;
 }
 
@@ -64,18 +66,22 @@ TrajectoryBuilder& TrajectoryBuilder::turnTo(double targetYawRad, double turnRat
                                              double speedMps, double dt)
 {
     double delta = targetYawRad - yaw_;
-    // Normalize to [-pi, pi].
+    /// @brief Normalize to [-pi, pi].
     while (delta > M_PI)
+    {
         delta -= 2.0 * M_PI;
+    }
     while (delta < -M_PI)
+    {
         delta += 2.0 * M_PI;
+    }
     return turnBy(delta, turnRateRps, speedMps, dt);
 }
 
 TrajectoryBuilder& TrajectoryBuilder::climbTo(double targetAltM, double climbRateMps,
                                               double speedMps, double dt)
 {
-    // targetAltM is height above ground (positive up); NED down = -alt.
+    /// @brief targetAltM is height above ground (positive up); NED down = -alt.
     const double targetDown = -targetAltM;
     const double downChange = targetDown - pos_.z; // positive = descend
     const double dir = (downChange >= 0.0) ? 1.0 : -1.0;
@@ -83,9 +89,9 @@ TrajectoryBuilder& TrajectoryBuilder::climbTo(double targetAltM, double climbRat
     const double target = std::fabs(downChange);
     while (climbed < target)
     {
-        // Climb changes altitude; integrate vertical motion directly.
+        /// @brief Climb changes altitude; integrate vertical motion directly.
         pos_.z += dir * climbRateMps * dt;
-        // Also advance horizontally at current heading (level forward).
+        /// @brief Also advance horizontally at current heading (level forward).
         const double cn = std::cos(yaw_);
         const double ce = std::sin(yaw_);
         pos_.x += cn * speedMps * dt;

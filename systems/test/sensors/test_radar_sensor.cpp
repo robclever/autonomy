@@ -10,7 +10,7 @@ constexpr double kTol = 1e-9;
 
 void expectNear(double a, double b, double tol = kTol) { assert(std::fabs(a - b) <= tol); }
 
-// Helper to build a simple observation.
+/// @brief Helper to build a simple observation.
 sim::Observation makeObs(double range, double az, double el, double signal)
 {
     sim::Observation o;
@@ -22,19 +22,19 @@ sim::Observation makeObs(double range, double az, double el, double signal)
 }
 } // namespace
 
-// Unit tests for sensors/radar/RadarSensor.
+/// @brief Unit tests for sensors/radar/RadarSensor.
 int main()
 {
     using systems::sensors::radar::RadarSensor;
 
-    // --- No observations -> no echoes ---
+    /// @brief --- No observations -> no echoes ---
     {
         RadarSensor sensor;
         const auto echoes = sensor.process({});
         assert(echoes.empty());
     }
 
-    // --- Range gating: target beyond maxRange is dropped ---
+    /// @brief --- Range gating: target beyond maxRange is dropped ---
     {
         systems::sensors::radar::RadarParams params;
         params.maxRangeM = 500.0;
@@ -51,7 +51,7 @@ int main()
         expectNear(echoes[0].range, 100.0, 50.0); // noisy, but near 100
     }
 
-    // --- Range gating: target closer than minRange is dropped ---
+    /// @brief --- Range gating: target closer than minRange is dropped ---
     {
         systems::sensors::radar::RadarParams params;
         params.minRangeM = 5.0;
@@ -68,7 +68,7 @@ int main()
         expectNear(echoes[0].range, 50.0, 50.0);
     }
 
-    // --- Detection threshold: weak signal dropped, strong signal kept ---
+    /// @brief --- Detection threshold: weak signal dropped, strong signal kept ---
     {
         systems::sensors::radar::RadarParams params;
         params.minRangeM = 1.0;
@@ -77,9 +77,9 @@ int main()
         RadarSensor sensor(params);
 
         std::vector<sim::Observation> obs;
-        // signalStrength=0.01 at range=100 -> detectibility = 0.01/10000 = 1e-6 (dropped)
+        /// @brief signalStrength=0.01 at range=100 -> detectibility = 0.01/10000 = 1e-6 (dropped)
         obs.push_back(makeObs(100.0, 0.0, 0.0, 0.01));
-        // signalStrength=1e6 at range=100 -> detectibility = min(1, 1e6/1e4)=1.0 (kept)
+        /// @brief signalStrength=1e6 at range=100 -> detectibility = min(1, 1e6/1e4)=1.0 (kept)
         obs.push_back(makeObs(100.0, 0.0, 0.0, 1e6));
 
         const auto echoes = sensor.process(obs);
@@ -87,7 +87,7 @@ int main()
         expectNear(echoes[0].likelihoodOfDetect, 1.0, kTol);
     }
 
-    // --- Echo carries signature and detection fields ---
+    /// @brief --- Echo carries signature and detection fields ---
     {
         systems::sensors::radar::RadarParams params;
         params.detectionThreshold = 0.0;

@@ -15,7 +15,7 @@ CameraDevice::sense(const World& world, const core::kinematics::Pose& aircraftPo
     const auto observations = world.observe(aircraftPose, obsParams_);
     const auto detections = sensor_.process(observations);
 
-    // Convert camera-specific measurements to generic Detections.
+    /// @brief Convert camera-specific measurements to generic Detections.
     std::vector<scenarios::Detection> out;
     out.reserve(detections.size());
     for (const auto& d : detections)

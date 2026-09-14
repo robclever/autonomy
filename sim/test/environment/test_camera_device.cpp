@@ -11,13 +11,13 @@ constexpr double kTol = 1e-9;
 void expectNear(double a, double b, double tol = kTol) { assert(std::fabs(a - b) <= tol); }
 } // namespace
 
-// Unit tests for sim environment/CameraDevice.
+/// @brief Unit tests for sim environment/CameraDevice.
 int main()
 {
     using systems::sensors::camera::CameraParams;
     using systems::sensors::camera::CameraSensor;
 
-    // --- Device produces detections from a world with one in-range landmark ---
+    /// @brief --- Device produces detections from a world with one in-range landmark ---
     {
         sim::World world;
         world.addLandmark("tower", core::math::Vec3{200.0, 0.0, -100.0}, 1.0);
@@ -37,13 +37,13 @@ int main()
 
         const auto dets = device.sense(world, observer);
         assert(!dets.empty());
-        // Range should be near 200 m.
+        /// @brief Range should be near 200 m.
         assert(std::fabs(dets[0].range - 200.0) < 50.0);
-        // Detection has confidence.
+        /// @brief Detection has confidence.
         assert(dets[0].confidence > 0.0);
     }
 
-    // --- Device produces generic Detections (not camera-specific) ---
+    /// @brief --- Device produces generic Detections (not camera-specific) ---
     {
         sim::World world;
         world.addLandmark("close", core::math::Vec3{50.0, 10.0, -100.0}, 1.0);
@@ -58,11 +58,11 @@ int main()
 
         const auto dets = device.sense(world, observer);
         assert(!dets.empty());
-        // Detections are generic: have range/azimuth/elevation/confidence
+        /// @brief Detections are generic: have range/azimuth/elevation/confidence
         expectNear(dets[0].azimuth, std::atan2(10.0, 50.0), 0.01);
     }
 
-    // --- Empty world produces no detections ---
+    /// @brief --- Empty world produces no detections ---
     {
         sim::World world;
         CameraSensor sensor;

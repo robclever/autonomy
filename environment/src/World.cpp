@@ -20,12 +20,15 @@ std::uint32_t World::addLandmark(const std::string& name, const core::math::Vec3
 
 std::optional<Landmark> World::landmark(std::uint32_t id) const
 {
+    std::optional<Landmark> result = std::nullopt;
     for (const auto& lm : landmarks_)
     {
         if (lm.id == id)
-            return lm;
+        {
+            result = lm;
+        }
     }
-    return std::nullopt;
+    return result;
 }
 
 std::vector<Observation> World::observe(const core::kinematics::Pose& observer,
@@ -38,21 +41,23 @@ std::vector<Observation> World::observe(const core::kinematics::Pose& observer,
     {
         const core::math::Vec3 rel = lm.positionNed - observer.position;
         const double range = rel.norm();
-        if (range < params.minRangeM || range > params.maxRangeM)
-            continue;
 
-        const core::math::Vec3 dirBody =
-            nedToBody.applyToDirection(rel / range); // unit vector, body frame
+        /// @brief Range gating.
+        if (range >= params.minRangeM && range <= params.maxRangeM)
+        {
+            const core::math::Vec3 dirBody =
+                nedToBody.applyToDirection(rel / range); // unit vector, body frame
 
-        Observation obs;
-        obs.id = lm.id;
-        obs.rangeM = range;
-        obs.azimuthRad = std::atan2(dirBody.y, dirBody.x);
-        obs.elevationRad = std::asin(-dirBody.z); // + up, since body z is down
-        obs.directionBody = dirBody;
-        obs.positionNed = lm.positionNed;
-        obs.signalStrength = lm.reflectivity / (range * range);
-        out.push_back(obs);
+            Observation obs;
+            obs.id = lm.id;
+            obs.rangeM = range;
+            obs.azimuthRad = std::atan2(dirBody.y, dirBody.x);
+            obs.elevationRad = std::asin(-dirBody.z); // + up, since body z is down
+            obs.directionBody = dirBody;
+            obs.positionNed = lm.positionNed;
+            obs.signalStrength = lm.reflectivity / (range * range);
+            out.push_back(obs);
+        }
     }
     return out;
 }

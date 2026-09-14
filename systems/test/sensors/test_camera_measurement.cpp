@@ -2,10 +2,10 @@
 
 #include <sensors/camera/CameraMeasurement.h>
 
-// Unit tests for sensors/camera/CameraMeasurement.
+/// @brief Unit tests for sensors/camera/CameraMeasurement.
 int main()
 {
-    // --- Default construction ---
+    /// @brief --- Default construction ---
     {
         systems::sensors::camera::CameraMeasurement m;
         assert(m.range == 0.0);
@@ -16,7 +16,7 @@ int main()
         assert(m.detectionConfidence == 0.0);
     }
 
-    // --- Field assignment ---
+    /// @brief --- Field assignment ---
     {
         systems::sensors::camera::CameraMeasurement m;
         m.range = 100.0;

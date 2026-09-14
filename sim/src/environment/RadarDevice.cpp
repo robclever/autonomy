@@ -21,7 +21,7 @@ RadarDevice::sense(const World& world, const core::kinematics::Pose& aircraftPos
 {
     const auto echoes = senseEchoes(world, aircraftPose);
 
-    // Convert radar-specific echoes to generic Detections.
+    /// @brief Convert radar-specific echoes to generic Detections.
     std::vector<scenarios::Detection> out;
     out.reserve(echoes.size());
     for (const auto& e : echoes)

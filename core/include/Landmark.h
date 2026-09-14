@@ -9,7 +9,7 @@
 namespace sim
 {
 
-// A fixed, observable thing in the world (tower, hangar, terrain feature...).
+/// @brief A fixed, observable thing in the world (tower, hangar, terrain feature...).
 struct Landmark
 {
     std::uint32_t id{0};

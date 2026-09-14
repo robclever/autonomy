@@ -20,13 +20,13 @@ void expectNear(const core::math::Vec3& a, const core::math::Vec3& b, double tol
 }
 } // namespace
 
-// Unit tests for environment/World.
+/// @brief Unit tests for environment/World.
 int main()
 {
     using core::math::Vec3;
     using sim::Landmark;
 
-    // --- Empty world produces no observations ---
+    /// @brief --- Empty world produces no observations ---
     {
         sim::World world;
         assert(world.landmarks().empty());
@@ -36,7 +36,7 @@ int main()
         assert(obs.empty());
     }
 
-    // --- addLandmark assigns sequential IDs starting at 1 ---
+    /// @brief --- addLandmark assigns sequential IDs starting at 1 ---
     {
         sim::World world;
         const auto id1 = world.addLandmark("first", Vec3{10.0, 0.0, 0.0});
@@ -49,7 +49,7 @@ int main()
         assert(world.landmarks().size() == 3);
     }
 
-    // --- addLandmark stores landmark fields correctly ---
+    /// @brief --- addLandmark stores landmark fields correctly ---
     {
         sim::World world;
         const auto id = world.addLandmark("tower", Vec3{100.0, 200.0, -50.0}, 0.8);
@@ -62,7 +62,7 @@ int main()
         assert(lm->reflectivity == 0.8);
     }
 
-    // --- landmark() returns nullopt for unknown ID ---
+    /// @brief --- landmark() returns nullopt for unknown ID ---
     {
         sim::World world;
         world.addLandmark("only", Vec3{1.0, 2.0, 3.0});
@@ -71,7 +71,7 @@ int main()
         assert(!world.landmark(99).has_value());
     }
 
-    // --- observe: single landmark directly ahead at known range ---
+    /// @brief --- observe: single landmark directly ahead at known range ---
     {
         sim::World world;
         world.addLandmark("ahead", Vec3{500.0, 0.0, -100.0});
@@ -86,7 +86,7 @@ int main()
         expectNear(obs[0].positionNed, Vec3{500.0, 0.0, -100.0});
     }
 
-    // --- observe: landmark to the right has positive azimuth ---
+    /// @brief --- observe: landmark to the right has positive azimuth ---
     {
         sim::World world;
         world.addLandmark("right", Vec3{0.0, 300.0, -100.0});

@@ -6,14 +6,14 @@
 #include <autonomy/SLAM/SlamMeasurement.h>
 #include <autonomy/SLAM/SlamState.h>
 
-// Unit tests for autonomy/SlamState and SlamMeasurement.
+/// @brief Unit tests for autonomy/SlamState and SlamMeasurement.
 int main()
 {
     using systems::autonomy::SlamLandmark;
     using systems::autonomy::SlamMeasurement;
     using systems::autonomy::SlamState;
 
-    // --- Default SlamState: null pose, empty map ---
+    /// @brief --- Default SlamState: null pose, empty map ---
     {
         SlamState s;
         assert(s.pose.position.x == 0.0);
@@ -22,7 +22,7 @@ int main()
         assert(s.landmarks.empty());
     }
 
-    // --- SlamLandmark field assignment ---
+    /// @brief --- SlamLandmark field assignment ---
     {
         SlamLandmark lm;
         lm.id = 7;
@@ -34,7 +34,7 @@ int main()
         assert(lm.positionNed.z == -5.0);
     }
 
-    // --- SlamMeasurement: inherits Spherical, has optional id ---
+    /// @brief --- SlamMeasurement: inherits Spherical, has optional id ---
     {
         SlamMeasurement m;
         assert(m.range == 0.0);

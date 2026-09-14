@@ -17,19 +17,19 @@ sim::Observation makeObs(double range, double az, double el, double signal)
 }
 } // namespace
 
-// Unit tests for sensors/camera/CameraSensor.
+/// @brief Unit tests for sensors/camera/CameraSensor.
 int main()
 {
     using systems::sensors::camera::CameraSensor;
 
-    // --- No observations -> no detections ---
+    /// @brief --- No observations -> no detections ---
     {
         CameraSensor sensor;
         const auto dets = sensor.process({});
         assert(dets.empty());
     }
 
-    // --- Range gating ---
+    /// @brief --- Range gating ---
     {
         systems::sensors::camera::CameraParams params;
         params.maxRangeM = 200.0;
@@ -45,7 +45,7 @@ int main()
         assert(dets.size() == 1);
     }
 
-    // --- FOV gating: target outside azimuth FOV is dropped ---
+    /// @brief --- FOV gating: target outside azimuth FOV is dropped ---
     {
         systems::sensors::camera::CameraParams params;
         params.maxRangeM = 2000.0;
@@ -64,7 +64,7 @@ int main()
         assert(std::fabs(dets[0].azimuth - 0.1) < 0.01);
     }
 
-    // --- FOV gating: target outside elevation FOV is dropped ---
+    /// @brief --- FOV gating: target outside elevation FOV is dropped ---
     {
         systems::sensors::camera::CameraParams params;
         params.maxRangeM = 2000.0;
@@ -83,7 +83,7 @@ int main()
         assert(std::fabs(dets[0].elevation - 0.05) < 0.01);
     }
 
-    // --- Detection threshold ---
+    /// @brief --- Detection threshold ---
     {
         systems::sensors::camera::CameraParams params;
         params.maxRangeM = 2000.0;
@@ -94,9 +94,9 @@ int main()
         CameraSensor sensor(params);
 
         std::vector<sim::Observation> obs;
-        // Weak signal at long range -> low confidence (dropped)
+        /// @brief Weak signal at long range -> low confidence (dropped)
         obs.push_back(makeObs(200.0, 0.0, 0.0, 0.01));
-        // Strong signal -> high confidence (kept)
+        /// @brief Strong signal -> high confidence (kept)
         obs.push_back(makeObs(50.0, 0.0, 0.0, 1e6));
 
         const auto dets = sensor.process(obs);
@@ -104,7 +104,7 @@ int main()
         assert(dets[0].detectionConfidence > 0.5);
     }
 
-    // --- Detection carries camera-specific fields ---
+    /// @brief --- Detection carries camera-specific fields ---
     {
         systems::sensors::camera::CameraParams params;
         params.detectionThreshold = 0.0;

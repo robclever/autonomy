@@ -17,9 +17,9 @@ namespace sim
 namespace scenarios
 {
 
-// Recorded result of one simulation step. Lets tests inspect what happened
-// at each timestep: the true pose, what the sensors saw (as generic
-// detections), what was fed to SLAM, and SLAM's state before/after.
+/// @brief Recorded result of one simulation step. Lets tests inspect what happened
+/// at each timestep: the true pose, what the sensors saw (as generic
+/// detections), what was fed to SLAM, and SLAM's state before/after.
 struct ScenarioStep
 {
     std::size_t step{0};
@@ -31,31 +31,31 @@ struct ScenarioStep
     systems::autonomy::SlamState slamAfter;
 };
 
-// A simulation scenario: a world (landmarks), an aircraft trajectory, a suite
-// of sensor devices, and a SLAM algorithm. Steps through time, at each step
-// sensing the world through all sensors and feeding merged measurements to SLAM.
-//
-// The scenario owns the world, trajectory, and sensor suite; the SLAM
-// algorithm is referenced so the caller can inspect/swap it.
+/// @brief A simulation scenario: a world (landmarks), an aircraft trajectory, a suite
+/// of sensor devices, and a SLAM algorithm. Steps through time, at each step
+/// sensing the world through all sensors and feeding merged measurements to SLAM.
+///
+/// The scenario owns the world, trajectory, and sensor suite; the SLAM
+/// algorithm is referenced so the caller can inspect/swap it.
 class Scenario
 {
   public:
     Scenario(World world, std::unique_ptr<Trajectory> trajectory, SensorSuite sensors,
              systems::autonomy::SlamAlgorithm& slam, double dt = 0.1);
 
-    // Whether to use ground-truth data association when converting detections.
+    /// @brief Whether to use ground-truth data association when converting detections.
     void setUseAssociation(bool useAssoc);
 
-    // Run all remaining steps to the end of the trajectory.
+    /// @brief Run all remaining steps to the end of the trajectory.
     void run();
 
-    // Run a single step. No-op if already at the end.
+    /// @brief Run a single step. No-op if already at the end.
     void step();
 
-    // Reset to the beginning (clears recorded steps and resets SLAM).
+    /// @brief Reset to the beginning (clears recorded steps and resets SLAM).
     void reset();
 
-    // Access recorded steps.
+    /// @brief Access recorded steps.
     const std::vector<ScenarioStep>& steps() const;
     std::size_t currentStep() const;
     bool atEnd() const;

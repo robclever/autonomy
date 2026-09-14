@@ -6,12 +6,12 @@ namespace core
 namespace measurement
 {
 
-// Base spherical measurement: range, azimuth, elevation.
-//
-// This is the fundamental geometric measurement type for any sensor that
-// reports targets in spherical coordinates (radar, infrared, etc.). Sensor-
-// specific measurements (e.g. RadarEcho) extend it with modality-specific
-// parameters such as signature and detection probability.
+/// @brief Base spherical measurement: range, azimuth, elevation.
+///
+/// This is the fundamental geometric measurement type for any sensor that
+/// reports targets in spherical coordinates (radar, infrared, etc.). Sensor-
+/// specific measurements (e.g. RadarEcho) extend it with modality-specific
+/// parameters such as signature and detection probability.
 struct Spherical
 {
     double range{0.0};     // [m] distance to target

@@ -13,16 +13,16 @@
 
 namespace
 {
-// Run a full SLAM scenario with ground-truth association and verify the
-// algorithm's state evolves correctly. Templated on the SLAM type so we
-// exercise both EkfSlam and GraphSlam through the same pipeline.
+/// @brief Run a full SLAM scenario with ground-truth association and verify the
+/// algorithm's state evolves correctly. Templated on the SLAM type so we
+/// exercise both EkfSlam and GraphSlam through the same pipeline.
 template <typename SlamAlgo> void runSlamScenario(const char* name)
 {
     using namespace sim::scenarios;
     using systems::sensors::radar::RadarParams;
     using systems::sensors::radar::RadarSensor;
 
-    // --- World: 5 landmarks at known positions ---
+    /// @brief --- World: 5 landmarks at known positions ---
     sim::World world;
     world.addLandmark("alpha", core::math::Vec3{250.0, 60.0, -500.0}, 1.0);
     world.addLandmark("bravo", core::math::Vec3{500.0, -40.0, -500.0}, 1.0);
@@ -30,12 +30,12 @@ template <typename SlamAlgo> void runSlamScenario(const char* name)
     world.addLandmark("delta", core::math::Vec3{1000.0, -60.0, -500.0}, 1.0);
     world.addLandmark("echo", core::math::Vec3{1250.0, 30.0, -500.0}, 1.0);
 
-    // --- Trajectory: fly north past all landmarks ---
+    /// @brief --- Trajectory: fly north past all landmarks ---
     TrajectoryBuilder builder(core::math::Vec3{0.0, 0.0, -500.0}, 0.0, 0.0);
     builder.flyStraight(1500.0, 50.0, 0.5);
     auto traj = std::make_unique<ListTrajectory>(builder.build());
 
-    // --- Radar: deterministic (no noise) so echoes match ground truth ---
+    /// @brief --- Radar: deterministic (no noise) so echoes match ground truth ---
     RadarParams params;
     params.maxRangeM = 2000.0;
     params.minRangeM = 1.0;
@@ -46,11 +46,11 @@ template <typename SlamAlgo> void runSlamScenario(const char* name)
     RadarSensor sensor(params);
     sim::RadarDevice device(sensor);
 
-    // --- Sensor suite ---
+    /// @brief --- Sensor suite ---
     SensorSuite suite;
     suite.addDevice(std::make_unique<sim::RadarDevice>(device));
 
-    // --- SLAM with ground-truth association ---
+    /// @brief --- SLAM with ground-truth association ---
     SlamAlgo slam;
     Scenario scenario(std::move(world), std::move(traj), std::move(suite), slam, 0.5);
     scenario.setUseAssociation(true);
@@ -61,9 +61,9 @@ template <typename SlamAlgo> void runSlamScenario(const char* name)
 
     std::cout << name << ": " << steps.size() << " steps\n";
 
-    // --- Verifications ---
+    /// @brief --- Verifications ---
 
-    // 1. SLAM tracked the aircraft pose at every step.
+    /// @brief 1. SLAM tracked the aircraft pose at every step.
     for (const auto& s : steps)
     {
         assert(std::fabs(s.slamAfter.pose.position.x - s.truePose.position.x) < 1e-9);
@@ -71,13 +71,13 @@ template <typename SlamAlgo> void runSlamScenario(const char* name)
         assert(std::fabs(s.slamAfter.pose.position.z - s.truePose.position.z) < 1e-9);
     }
 
-    // 2. Landmarks were added to the SLAM map. With ground-truth association
-    //    and all landmarks in range, the final map should contain all 5.
+    /// @brief 2. Landmarks were added to the SLAM map. With ground-truth association
+    ///    and all landmarks in range, the final map should contain all 5.
     const auto finalState = slam.state();
     std::cout << name << ": final map has " << finalState.landmarks.size() << " landmarks\n";
     assert(finalState.landmarks.size() == 5 && "all 5 landmarks should be in the SLAM map");
 
-    // 3. No duplicate landmark IDs in the map.
+    /// @brief 3. No duplicate landmark IDs in the map.
     for (std::size_t i = 0; i < finalState.landmarks.size(); ++i)
     {
         for (std::size_t j = i + 1; j < finalState.landmarks.size(); ++j)
@@ -87,8 +87,8 @@ template <typename SlamAlgo> void runSlamScenario(const char* name)
         }
     }
 
-    // 4. Landmarks were added incrementally: the map grew over time (not all
-    //    at once at the first step).
+    /// @brief 4. Landmarks were added incrementally: the map grew over time (not all
+    ///    at once at the first step).
     std::size_t maxMapSize = 0;
     std::size_t firstFullStep = 0;
     for (std::size_t i = 0; i < steps.size(); ++i)
@@ -104,9 +104,9 @@ template <typename SlamAlgo> void runSlamScenario(const char* name)
     std::cout << name << ": map full at step " << firstFullStep << " of " << steps.size() - 1
               << "\n";
 
-    // 5. At the step where a landmark first appears, it was actually observed
-    //    (had an echo) at that step or earlier. We verify the first step that
-    //    reports 3+ landmarks had echoes at that step.
+    /// @brief 5. At the step where a landmark first appears, it was actually observed
+    ///    (had an echo) at that step or earlier. We verify the first step that
+    ///    reports 3+ landmarks had echoes at that step.
     for (const auto& s : steps)
     {
         if (s.slamAfter.landmarks.size() >= 3)
@@ -116,7 +116,7 @@ template <typename SlamAlgo> void runSlamScenario(const char* name)
         }
     }
 
-    // 6. Measurements carried landmark IDs (association worked).
+    /// @brief 6. Measurements carried landmark IDs (association worked).
     std::size_t associatedCount = 0;
     for (const auto& s : steps)
     {
@@ -129,7 +129,7 @@ template <typename SlamAlgo> void runSlamScenario(const char* name)
     assert(associatedCount > 0 && "ground-truth association should produce IDs");
     std::cout << name << ": " << associatedCount << " associated measurements\n";
 
-    // 7. Reset works: after reset, the map is empty again.
+    /// @brief 7. Reset works: after reset, the map is empty again.
     slam.reset();
     assert(slam.state().landmarks.empty() && "reset should clear the map");
 
@@ -137,8 +137,8 @@ template <typename SlamAlgo> void runSlamScenario(const char* name)
 }
 } // namespace
 
-// Full SLAM pipeline scenario with ground-truth data association.
-// Exercises both EKF and Graph SLAM through the same pipeline.
+/// @brief Full SLAM pipeline scenario with ground-truth data association.
+/// Exercises both EKF and Graph SLAM through the same pipeline.
 int main()
 {
     runSlamScenario<systems::autonomy::EkfSlam>("slam_ekf");

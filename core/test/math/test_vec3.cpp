@@ -16,12 +16,12 @@ void expectNear(const core::math::Vec3& a, const core::math::Vec3& b, double tol
 }
 } // namespace
 
-// Unit tests for math/Vec3.
+/// @brief Unit tests for math/Vec3.
 int main()
 {
     using core::math::Vec3;
 
-    // --- Construction ---
+    /// @brief --- Construction ---
     {
         Vec3 v; // default
         expectNear(v.x, 0.0);
@@ -35,7 +35,7 @@ int main()
         expectNear(v.z, 3.0);
     }
 
-    // --- Addition ---
+    /// @brief --- Addition ---
     {
         Vec3 a(1.0, 2.0, 3.0);
         Vec3 b(4.0, 5.0, 6.0);
@@ -43,7 +43,7 @@ int main()
         expectNear(c, Vec3(5.0, 7.0, 9.0));
     }
 
-    // --- Subtraction ---
+    /// @brief --- Subtraction ---
     {
         Vec3 a(4.0, 5.0, 6.0);
         Vec3 b(1.0, 2.0, 3.0);
@@ -51,55 +51,55 @@ int main()
         expectNear(c, Vec3(3.0, 3.0, 3.0));
     }
 
-    // --- Scalar multiplication (member) ---
+    /// @brief --- Scalar multiplication (member) ---
     {
         Vec3 v(1.0, -2.0, 3.0);
         Vec3 r = v * 2.0;
         expectNear(r, Vec3(2.0, -4.0, 6.0));
     }
 
-    // --- Scalar multiplication (free function, reverse order) ---
+    /// @brief --- Scalar multiplication (free function, reverse order) ---
     {
         Vec3 v(1.0, -2.0, 3.0);
         Vec3 r = 3.0 * v;
         expectNear(r, Vec3(3.0, -6.0, 9.0));
     }
 
-    // --- Scalar division ---
+    /// @brief --- Scalar division ---
     {
         Vec3 v(6.0, -4.0, 2.0);
         Vec3 r = v / 2.0;
         expectNear(r, Vec3(3.0, -2.0, 1.0));
     }
 
-    // --- Compound addition ---
+    /// @brief --- Compound addition ---
     {
         Vec3 v(1.0, 2.0, 3.0);
         v += Vec3(10.0, 20.0, 30.0);
         expectNear(v, Vec3(11.0, 22.0, 33.0));
     }
 
-    // --- Compound subtraction ---
+    /// @brief --- Compound subtraction ---
     {
         Vec3 v(10.0, 20.0, 30.0);
         v -= Vec3(1.0, 2.0, 3.0);
         expectNear(v, Vec3(9.0, 18.0, 27.0));
     }
 
-    // --- Dot product ---
+    /// @brief --- Dot product ---
     {
         Vec3 a(1.0, 2.0, 3.0);
         Vec3 b(4.0, 5.0, 6.0);
         expectNear(a.dot(b), 32.0); // 1*4 + 2*5 + 3*6
     }
     {
-        // Orthogonal vectors have zero dot product.
+        /// @brief Orthogonal vectors have zero dot product.
         Vec3 x(1.0, 0.0, 0.0);
         Vec3 y(0.0, 1.0, 0.0);
         expectNear(x.dot(y), 0.0);
     }
 
-    // --- Cross product ---
+    /// @brief --- Cross product ---
     {
         Vec3 x(1.0, 0.0, 0.0);
         Vec3 y(0.0, 1.0, 0.0);
@@ -109,29 +109,29 @@ int main()
     {
         Vec3 a(1.0, 2.0, 3.0);
         Vec3 b(4.0, 5.0, 6.0);
-        // a x b = (2*6-3*5, 3*4-1*6, 1*5-2*4) = (-3, 6, -3)
+        /// @brief a x b = (2*6-3*5, 3*4-1*6, 1*5-2*4) = (-3, 6, -3)
         expectNear(a.cross(b), Vec3(-3.0, 6.0, -3.0));
     }
     {
-        // Cross product is anti-commutative: a x b == -(b x a).
+        /// @brief Cross product is anti-commutative: a x b == -(b x a).
         Vec3 a(1.0, -2.0, 3.0);
         Vec3 b(-4.0, 5.0, -6.0);
         expectNear(a.cross(b), b.cross(a) * -1.0);
     }
 
-    // --- normSq ---
+    /// @brief --- normSq ---
     {
         Vec3 v(3.0, 4.0, 0.0);
         expectNear(v.normSq(), 25.0);
     }
 
-    // --- norm ---
+    /// @brief --- norm ---
     {
         Vec3 v(3.0, 4.0, 0.0);
         expectNear(v.norm(), 5.0);
     }
 
-    // --- normalized ---
+    /// @brief --- normalized ---
     {
         Vec3 v(0.0, 0.0, 5.0);
         Vec3 n = v.normalized();
@@ -139,13 +139,13 @@ int main()
         expectNear(n.norm(), 1.0);
     }
     {
-        // Zero vector normalizes to zero.
+        /// @brief Zero vector normalizes to zero.
         Vec3 v(0.0, 0.0, 0.0);
         Vec3 n = v.normalized();
         expectNear(n, Vec3(0.0, 0.0, 0.0));
     }
 
-    // --- isApprox ---
+    /// @brief --- isApprox ---
     {
         Vec3 a(1.0, 2.0, 3.0);
         Vec3 b(1.0, 2.0, 3.0);

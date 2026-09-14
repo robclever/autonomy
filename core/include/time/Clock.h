@@ -8,9 +8,9 @@ namespace core
 namespace time
 {
 
-// Deterministic, step-based clock. The whole simulation advances in fixed
-// timesteps so runs are reproducible and unit-testable (see .README,
-// "Guiding principles").
+/// @brief Deterministic, step-based clock. The whole simulation advances in fixed
+/// timesteps so runs are reproducible and unit-testable (see .README,
+/// "Guiding principles").
 class Clock
 {
   public:

@@ -12,18 +12,18 @@ namespace systems
 namespace autonomy
 {
 
-// A landmark as estimated by SLAM: position in NED plus an identifier.
-// The scaffold stores only the mean; a full implementation adds a
-// covariance block per landmark.
+/// @brief A landmark as estimated by SLAM: position in NED plus an identifier.
+/// The scaffold stores only the mean; a full implementation adds a
+/// covariance block per landmark.
 struct SlamLandmark
 {
     std::uint32_t id{0};
     core::math::Vec3 positionNed; // estimated position [m], NED
 };
 
-// The complete output of a SLAM algorithm at one time step: the vehicle's
-// estimated pose and the current map of landmarks. This is what autonomy,
-// planning, and evaluation consume.
+/// @brief The complete output of a SLAM algorithm at one time step: the vehicle's
+/// estimated pose and the current map of landmarks. This is what autonomy,
+/// planning, and evaluation consume.
 struct SlamState
 {
     core::kinematics::Pose pose;         // vehicle pose estimate (NED)

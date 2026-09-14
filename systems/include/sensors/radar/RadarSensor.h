@@ -13,7 +13,7 @@ namespace sensors
 namespace radar
 {
 
-// Tunable parameters for the radar sensor model.
+/// @brief Tunable parameters for the radar sensor model.
 struct RadarParams
 {
     double maxRangeM{1000.0};           // ignore targets beyond this range
@@ -24,22 +24,22 @@ struct RadarParams
     double detectionThreshold{0.5};     // minimum likelihoodOfDetect to register a hit
 };
 
-// Radar sensor model.
-//
-// Consumes the structured, noiseless observations produced by World::observe()
-// and degrades them the way a real radar would:
-//   1. Range gating (min/max range)
-//   2. Detection probability from IR signature and 1/r^2 falloff
-//   3. Additive noise on range / azimuth / elevation
-//
-// Only targets whose likelihoodOfDetect exceeds the threshold are reported.
-// This is the per-sensor model the sim device (RadarDevice) will call into.
+/// @brief Radar sensor model.
+///
+/// Consumes the structured, noiseless observations produced by World::observe()
+/// and degrades them the way a real radar would:
+///   1. Range gating (min/max range)
+///   2. Detection probability from IR signature and 1/r^2 falloff
+///   3. Additive noise on range / azimuth / elevation
+///
+/// Only targets whose likelihoodOfDetect exceeds the threshold are reported.
+/// This is the per-sensor model the sim device (RadarDevice) will call into.
 class RadarSensor
 {
   public:
     explicit RadarSensor(const RadarParams& params = {}) : params_(params) {}
 
-    // Produce radar echoes from true world observations.
+    /// @brief Produce radar echoes from true world observations.
     std::vector<RadarEcho> process(const std::vector<sim::Observation>& observations) const;
 
     const RadarParams& params() const noexcept { return params_; }
