@@ -1,10 +1,13 @@
-#pragma once
+#ifndef KINEMATICS_POSE_H
+#define KINEMATICS_POSE_H
 
-#include "core/math/Quat.h"
-#include "core/math/Vec3.h"
+#include <math/Quat.h>
+#include <math/Vec3.h>
 
-namespace core {
-namespace kinematics {
+namespace core
+{
+namespace kinematics
+{
 
 // Where the aircraft is and how it is oriented in the world.
 struct Pose
@@ -15,3 +18,5 @@ struct Pose
 
 } // namespace kinematics
 } // namespace core
+
+#endif // KINEMATICS_POSE_H

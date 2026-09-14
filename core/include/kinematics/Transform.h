@@ -1,11 +1,14 @@
-#pragma once
+#ifndef KINEMATICS_TRANSFORM_H
+#define KINEMATICS_TRANSFORM_H
 
-#include "core/math/Quat.h"
-#include "core/math/Vec3.h"
-#include "core/kinematics/Pose.h"
+#include <kinematics/Pose.h>
+#include <math/Quat.h>
+#include <math/Vec3.h>
 
-namespace core {
-namespace kinematics {
+namespace core
+{
+namespace kinematics
+{
 
 // Transform from a source frame A to a target frame B.
 // A Transform is fully described by where B's origin sits in A, plus the
@@ -45,3 +48,5 @@ struct Transform
 
 } // namespace kinematics
 } // namespace core
+
+#endif // KINEMATICS_TRANSFORM_H

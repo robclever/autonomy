@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TIME_CLOCK_H
+#define TIME_CLOCK_H
 
 #include <cstdint>
 
@@ -34,3 +35,5 @@ class Clock
 
 } // namespace time
 } // namespace core
+
+#endif // TIME_CLOCK_H

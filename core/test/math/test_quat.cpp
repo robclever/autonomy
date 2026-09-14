@@ -1,8 +1,8 @@
 #include <cassert>
 #include <cmath>
 
-#include <core/math/Quat.h>
-#include <core/math/Vec3.h>
+#include <math/Quat.h>
+#include <math/Vec3.h>
 
 namespace
 {
@@ -25,7 +25,7 @@ void expectNear(const core::math::Quat& a, const core::math::Quat& b, double tol
 }
 } // namespace
 
-// Unit tests for core/math/Quat.
+// Unit tests for math/Quat.
 int main()
 {
     using core::math::Quat;

@@ -1,7 +1,10 @@
-#pragma once
+#ifndef KINEMATICS_FRAMEID_H
+#define KINEMATICS_FRAMEID_H
 
-namespace core {
-namespace kinematics {
+namespace core
+{
+namespace kinematics
+{
 
 // Coordinate frames of the aircraft domain.
 //
@@ -17,3 +20,5 @@ enum class FrameId
 
 } // namespace kinematics
 } // namespace core
+
+#endif // KINEMATICS_FRAMEID_H

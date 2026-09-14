@@ -1,6 +1,6 @@
 #include <cassert>
 
-#include "core/time/Clock.h"
+#include <time/Clock.h>
 
 // Minimal unit test for core/Clock. Uses assert() directly for now; a test
 // framework (Catch2 / GoogleTest) can be wired in later.

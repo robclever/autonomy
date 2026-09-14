@@ -1,7 +1,7 @@
 #include <cassert>
 #include <cmath>
 
-#include <core/math/Vec3.h>
+#include <math/Vec3.h>
 
 namespace
 {
@@ -16,7 +16,7 @@ void expectNear(const core::math::Vec3& a, const core::math::Vec3& b, double tol
 }
 } // namespace
 
-// Unit tests for core/math/Vec3.
+// Unit tests for math/Vec3.
 int main()
 {
     using core::math::Vec3;

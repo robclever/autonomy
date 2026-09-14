@@ -1,11 +1,14 @@
-#pragma once
+#ifndef MATH_QUAT_H
+#define MATH_QUAT_H
 
 #include <cmath>
 
-#include "core/math/Vec3.h"
+#include <math/Vec3.h>
 
-namespace core {
-namespace math {
+namespace core
+{
+namespace math
+{
 
 // Unit quaternion, Hamilton convention (w real, vector x,y,z). A vector v is
 // rotated by  q' = q * [0, v] * q*.
@@ -21,7 +24,8 @@ struct Quat
 
     static Quat identity() { return Quat{1.0, 0.0, 0.0, 0.0}; }
 
-    static Quat fromAxisAngle(const Vec3& axis, double radians) {
+    static Quat fromAxisAngle(const Vec3& axis, double radians)
+    {
         const double n = axis.norm();
         if (n < 1e-12)
             return identity();
@@ -34,7 +38,8 @@ struct Quat
     // Standard aerospace yaw-pitch-roll attitude built in NED frame order
     // (rotations about Down, +East/body-y, +body-x respectively), giving a
     // NED -> body rotation.
-    static Quat fromYawPitchRoll(double yaw, double pitch, double roll) {
+    static Quat fromYawPitchRoll(double yaw, double pitch, double roll)
+    {
         const Quat qz = fromAxisAngle(Vec3{0.0, 0.0, 1.0}, yaw);   // about Down
         const Quat qy = fromAxisAngle(Vec3{0.0, 1.0, 0.0}, pitch); // about +East
         const Quat qx = fromAxisAngle(Vec3{1.0, 0.0, 0.0}, roll);  // about +x
@@ -43,7 +48,8 @@ struct Quat
 
     double normSq() const { return w * w + x * x + y * y + z * z; }
     Quat conjugate() const { return Quat{w, -x, -y, -z}; }
-    Quat inverse() const {
+    Quat inverse() const
+    {
         const double ns = normSq();
         if (ns < 1e-16)
             return identity();
@@ -51,13 +57,15 @@ struct Quat
         return Quat{c.w / ns, c.x / ns, c.y / ns, c.z / ns};
     }
 
-    Quat operator*(const Quat& o) const {
+    Quat operator*(const Quat& o) const
+    {
         return Quat{w * o.w - x * o.x - y * o.y - z * o.z, w * o.x + x * o.w + y * o.z - z * o.y,
                     w * o.y - x * o.z + y * o.w + z * o.x, w * o.z + x * o.y - y * o.x + z * o.w};
     }
 
     // Rotate vector v by this quaternion (assumes unit length).
-    Vec3 rotate(const Vec3& v) const {
+    Vec3 rotate(const Vec3& v) const
+    {
         const Quat p{0.0, v.x, v.y, v.z};
         const Quat r = *this * p * conjugate();
         return Vec3{r.x, r.y, r.z};
@@ -66,3 +74,5 @@ struct Quat
 
 } // namespace math
 } // namespace core
+
+#endif // MATH_QUAT_H

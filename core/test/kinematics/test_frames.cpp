@@ -1,10 +1,10 @@
 #include <cassert>
 #include <cmath>
 
-#include <core/math/Quat.h>
-#include <core/math/Vec3.h>
-#include <core/kinematics/Pose.h>
-#include <core/kinematics/Transform.h>
+#include <kinematics/Pose.h>
+#include <kinematics/Transform.h>
+#include <math/Quat.h>
+#include <math/Vec3.h>
 
 namespace
 {
@@ -37,7 +37,8 @@ int main()
     expectNear(std::asin(-fwd.z), 0.3, 1e-6);
 
     // Body <-> NED round-trip through a Transform.
-    const core::kinematics::Pose pose{Vec3{10.0, -20.0, -500.0}, Quat::fromYawPitchRoll(0.7, -0.2, 0.1)};
+    const core::kinematics::Pose pose{Vec3{10.0, -20.0, -500.0},
+                                      Quat::fromYawPitchRoll(0.7, -0.2, 0.1)};
     const core::kinematics::Transform nedToBody = core::kinematics::Transform::nedToBody(pose);
     const Vec3 pNed{1000.0, 30.0, -450.0};
     expectNear(nedToBody.applyInverseToPoint(nedToBody.applyToPoint(pNed)), pNed);
@@ -51,6 +52,17 @@ int main()
         pose.position + pose.orientation.conjugate().rotate(Vec3{500.0, 0.0, 0.0});
     const Vec3 aheadBody = nedToBody.applyToPoint(aheadNed);
     expectNear(std::atan2(aheadBody.y, aheadBody.x), 0.0, 1e-9);
+
+    // Direction transform: a direction is rotated but not translated.
+    const Vec3 dirNed{1.0, 0.0, 0.0};
+    const Vec3 dirBody = nedToBody.applyToDirection(dirNed);
+    expectNear(dirBody, nedToBody.rotation.rotate(dirNed));
+    const Vec3 dirBack = nedToBody.applyInverseToDirection(dirBody);
+    expectNear(dirBack, dirNed);
+
+    // applyToDirection ignores translation (direction vs point).
+    const core::kinematics::Transform tWithTrans{Vec3{100.0, 200.0, 300.0}, Quat::identity()};
+    expectNear(tWithTrans.applyToDirection(dirNed), dirNed);
 
     return 0;
 }

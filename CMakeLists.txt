@@ -14,3 +14,7 @@ enable_testing()
 
 # Add core library
 add_subdirectory(core)
+
+# Add sim library
+add_subdirectory(sim)
+

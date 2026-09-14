@@ -10,7 +10,7 @@ PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 
 cd "$PROJECT_DIR"
 
-FILES=$(find core -type f \( -name '*.cpp' -o -name '*.h' \))
+FILES=$(find core sim -type f \( -name '*.cpp' -o -name '*.h' \))
 
 if [ -z "$FILES" ]; then
     echo "No source files found."
