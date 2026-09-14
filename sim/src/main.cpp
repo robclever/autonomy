@@ -1,10 +1,10 @@
 #include <iomanip>
 #include <iostream>
 
-#include "environment/World.h"
-#include "math/Quat.h"
-#include "math/Vec3.h"
-#include "time/Clock.h"
+#include <environment/World.h>
+#include <math/Quat.h>
+#include <math/Vec3.h>
+#include <time/Clock.h>
 
 // Temporary bootstrap: proves the build and the first vertical slice
 // (world model -> structured observations from an aircraft pose). Sensor,
