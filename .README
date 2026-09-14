@@ -52,10 +52,12 @@ systems/
   fusion/      sensor fusion / state estimation (e.g. EKF/UKF)
   autonomy/    SLAM (mapping + localization), path planning, guidance, control
 core/
-  math/        minimal Vec3 + Quaternion (dependency-free for now)
-  Frames.h     NED/body frames, Pose + Transform
-  Clock.h      deterministic step-based clock
-  (later:      message types, noise models)
+  include/
+    math/        minimal Vec3 + Quaternion (dependency-free for now)
+    kinematics/  NED/body frames, Pose + Transform
+    time/        deterministic step-based clock
+    measurement/ angle types
+    (later:      message types, noise models)
 sim/           simulation loop / orchestrator
 evaluation/    metrics comparing estimates to ground truth
 visualization/ map & trajectory viewers
@@ -75,8 +77,27 @@ tests/         unit tests (assert-based, wired into CTest and `make tests`)
 - Build: canonical `CMakeLists.txt` (C++17, CTest); a plain `Makefile` builds
   the same targets when cmake isn't installed. Try `make`, then `make tests`.
 - Formatting: `.clang-format` (`make format` / `make check-format`).
-- CI: `.github/workflows/ci.yml` — builds, runs tests, and checks formatting on
-  every push / pull request.
+- CI: `.github/workflows/ci.yml` — builds, runs tests, checks formatting, and
+  verifies dependency layering on every push / pull request.
+
+### Running CI locally
+
+The CI workflow steps can be run manually:
+
+```bash
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build --parallel
+ctest --test-dir build --output-on-failure
+clang-format --dry-run --Werror $(git ls-files '*.cpp' '*.h')
+python3 scripts/check_deps.py
+```
+
+To run the actual GitHub Actions workflow locally, install
+[act](https://github.com/nektos/act) (`brew install act`) and run:
+
+```bash
+act
+```
 
 ## Status
 
